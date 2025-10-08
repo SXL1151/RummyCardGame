@@ -1,5 +1,5 @@
 [theme]
-backgroundColor = "mintGreen"
+backgroundColor = "blue"
 
 [global]
 base="custom"

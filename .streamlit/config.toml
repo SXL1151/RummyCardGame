@@ -1,5 +1,7 @@
 [theme]
-backgroundColor = "blue"
-
+backgroundColor = "slateGray"
+baseRadius = "full"
+textColor = "white"
+primaryColor = "mintGreen"
 [global]
 base="custom"

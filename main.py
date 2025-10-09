@@ -2,7 +2,7 @@ import streamlit as st
 import toml
 import random
 values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
-
+nameError = True
 # List of possible suits (H = Hearts, S = Spades, C = Clubs, D = Diamonds)
 suits = ["H", "S", "C", "D"]
 
@@ -23,6 +23,24 @@ class Deck:
     def create_deck(self):
         for s in suits:
             for v in values:
+                if v == "H":
+                    st.text("show")
+                    v = st.markdown('''
+:hearts:
+
+''')
+                elif v == "S":
+                    v = st.markdown('''
+:spades:
+''')
+                elif v == "C":
+                    v = st.markdown('''
+:clubs:
+''')
+                elif v == "D":
+                    v = st.markdown('''
+:diamonds:
+''')
                 self.cards.append(f"{v}{s}")
     def __repr__(self):
         return self.cards
@@ -34,11 +52,16 @@ class Deck:
             return None
         card = random.choice(self.cards)
         return card
+    def pop_one(self, card):
+        index = self.cards.index(card)
+        self.cards.pop(index)
+        
 class Hand:
     def __init__(self, owner="Player"):
         self.owner = owner
         self.cards = []
     def add_card(self, card):
+        
         self.cards.append(card)
     def show(self):
         return f"{self.owner}'s hand: {str(self.cards)}"
@@ -58,39 +81,41 @@ try:
         name = st.text_input(f"Enter Player {i+1} Name", key=i)
         if name == "":
             players.append(f"Player {i+1}")
+        elif name in players:
+            st.error("Names cannot be the same(add unique identifier)")
+            nameError = True
         else:
             players.append(name)
-    st.text(f"{playerCt} players will be playing")
-    if playerCt == "2":
-        cardsPerHand = 13
-    elif playerCt == ("3") or playerCt == ("4"):
-        cardsPerHand = 7
-    else:
-        cardsPerHand = 6
-    st.success(f"Each player will recieve {cardsPerHand} cards")
-    if playerCt:
-        butPress = st.button("Start Game")
-    if butPress:
-        st.success("Game has started!")
+            nameError = False
+        
+    if nameError == False:
+        st.text(f"{playerCt} players will be playing")
+        if playerCt == "2":
+            cardsPerHand = 13
+        elif playerCt == ("3") or playerCt == ("4"):
+            cardsPerHand = 7
+        else:
+            cardsPerHand = 6
+        st.success(f"Each player will recieve {cardsPerHand} cards")
+        if playerCt:
+            butPress = st.button("Start Game")
+            nameError = False
+        if nameError == False:
+            if butPress:
+                st.success("Game has started!")
 except:
     pass
-deck_1 = Deck()
-deck_1.create_deck()
-st.text(deck_1.__repr__())
-st.text(players)
-for player in players:
-    for i in range(cardsPerHand):
+if nameError == False:
+    deck_1 = Deck()
+    deck_1.create_deck()
+    deck_1.shuffle()
+    st.text(deck_1.__repr__())
+    st.text(players)
+    for player in players:
         hand = Hand(player)
-        hand.add_card(deck_1.deal_one())
-        st.text(hand.show())
+        for i in range(cardsPerHand):  
+            dealt = deck_1.deal_one()          
+            hand.add_card(dealt)
+        st.markdown(hand.show())
 
-
-
-
-
-
-
-
-
-
-
+    

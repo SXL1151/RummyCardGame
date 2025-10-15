@@ -1,6 +1,7 @@
 import streamlit as st
 import toml
 import random
+import time
 values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
 nameError = True
 # List of possible suits (H = Hearts, S = Spades, C = Clubs, D = Diamonds)
@@ -51,6 +52,8 @@ class Deck:
         if self.cards == "":
             return None
         card = random.choice(self.cards)
+        index = self.cards.index(card)
+        self.cards.pop(index)
         return card
     def pop_one(self, card):
         index = self.cards.index(card)
@@ -105,7 +108,9 @@ try:
                 st.success("Game has started!")
 except:
     pass
+once = True
 if nameError == False:
+    hands = []
     deck_1 = Deck()
     deck_1.create_deck()
     deck_1.shuffle()
@@ -116,6 +121,31 @@ if nameError == False:
         for i in range(cardsPerHand):  
             dealt = deck_1.deal_one()          
             hand.add_card(dealt)
-        st.markdown(hand.show())
+        hand2 = hand.show()
+        hands.append(hand.cards)
+    finDeck = (deck_1.__repr__())
+    finDeckStr = ""
+    for card in finDeck:
+        finDeckStr = finDeckStr + " " + card
+    st.success(f"Deck: {finDeckStr}")
 
+    st.warning("Round 1")
+    st.warning(f"Please pass the device to {players[len(players)-(len(players))]}")
+    cardsUp = []
+    st.error("Game will continue in 5 seconds")
     
+    if once == True:
+        with st.spinner("Loading..."):
+            time.sleep(5)
+        once = False
+    st.text(f"Hand: {hands[0]}")
+    try:
+        option = st.radio("Pick an option", [f"select {cardsUp[0]} from the cards up deck", "Pick top card from cards down deck"])
+    except:
+        option = st.radio("Pick an option", "Pick top card from cards down deck")
+    disposalCard = st.selectbox("Pick a card to dispose", hands[0])
+    cardsUp.append(disposalCard)
+    deck_1 = Deck()
+    deck_1.pop_one(disposalCard)
+
+

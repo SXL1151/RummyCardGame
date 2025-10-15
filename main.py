@@ -55,8 +55,8 @@ class Deck:
         index = self.cards.index(card)
         self.cards.pop(index)
         return card
-    def pop_one(self, card):
-        index = self.cards.index(card)
+    def pop_one(self, card, cards):
+        index = cards.index(card)
         self.cards.pop(index)
         
 class Hand:
@@ -146,6 +146,6 @@ if nameError == False:
     disposalCard = st.selectbox("Pick a card to dispose", hands[0])
     cardsUp.append(disposalCard)
     deck_1 = Deck()
-    deck_1.pop_one(disposalCard)
+    deck_1.pop_one(disposalCard, hands[0])
 
 

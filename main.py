@@ -7,7 +7,6 @@ nameError = True
 # List of possible suits (H = Hearts, S = Spades, C = Clubs, D = Diamonds)
 suits = ["H", "S", "C", "D"]
 
-
 class Card:
     def __init__(self, v, s):
         self.value = v
@@ -66,8 +65,14 @@ class Hand:
     def add_card(self, card):
         
         self.cards.append(card)
+    def pop_one(self, card, cards):
+        index = cards.index(card)
+        cards.pop(index)
+        self.cards = cards
+        return self.cards
     def show(self):
         return f"{self.owner}'s hand: {str(self.cards)}"
+    
 files = [ "C:\\Users\\SXL1151\\.streamlit\\secrets.toml", "C:\\Users\\SXL1151\\Desktop\\.streamlit\\secrets.toml",]
 players = []
 st.session_state.intro = True
@@ -78,7 +83,6 @@ st.markdown('''
             ''')
    
 try:
-    
     playerCt = st.selectbox("How many players will be playing?", ("2", "3", "4", "5", "6"))
     for i in range(int(playerCt)):
         name = st.text_input(f"Enter Player {i+1} Name", key=i)
@@ -105,11 +109,15 @@ try:
             nameError = False
         if nameError == False:
             if butPress:
+                st.session_state["press"] = True
+            if st.session_state["press"] == True:
                 st.success("Game has started!")
+                once = True
+            
+
 except:
     pass
-once = True
-if nameError == False:
+if once == True:
     hands = []
     deck_1 = Deck()
     deck_1.create_deck()
@@ -123,29 +131,41 @@ if nameError == False:
             hand.add_card(dealt)
         hand2 = hand.show()
         hands.append(hand.cards)
+    st.session_state.hands = hands
     finDeck = (deck_1.__repr__())
     finDeckStr = ""
     for card in finDeck:
         finDeckStr = finDeckStr + " " + card
     st.success(f"Deck: {finDeckStr}")
+st.warning("Round 1")
+st.warning(f"Please pass the device to {players[len(players)-(len(players))]}")
+cardsUp = []
+'''
+st.error("Game will continue in 5 seconds")
 
-    st.warning("Round 1")
-    st.warning(f"Please pass the device to {players[len(players)-(len(players))]}")
-    cardsUp = []
-    st.error("Game will continue in 5 seconds")
-    
-    if once == True:
-        with st.spinner("Loading..."):
-            time.sleep(5)
-        once = False
-    st.text(f"Hand: {hands[0]}")
-    try:
-        option = st.radio("Pick an option", [f"select {cardsUp[0]} from the cards up deck", "Pick top card from cards down deck"])
-    except:
-        option = st.radio("Pick an option", "Pick top card from cards down deck")
-    disposalCard = st.selectbox("Pick a card to dispose", hands[0])
-    cardsUp.append(disposalCard)
-    deck_1 = Deck()
-    deck_1.pop_one(disposalCard, hands[0])
-
-
+if once == True:
+    with st.spinner("Loading..."):
+        time.sleep(5)
+'''
+if once == True: #Shreyas was here lol
+    once = False
+if once == False:
+    while True:
+        st.text(f"Hand: {st.session_state.hands[0]}")
+        try:
+            option = st.radio("Pick an option", [f"select {cardsUp[0]} from the cards up deck", "Pick top card from cards down deck"])
+        except:
+            option = st.radio("Pick an option", ["Pick top card from cards down deck", "hi"])
+        disposalCard = st.radio("Pick a card to dispose", hands[0], key="disposalCard", on_change="disposalCard")
+        popped = hand.pop_one(st.session_state.disposalCard, hands[0])
+        hands[0] = hand.cards
+        st.text(hand.cards)
+        st.session_state.hands = hands
+        if st.session_state.disposalCard == disposalCard:
+            break
+        else:
+            continue
+'''
+cardsUp.append(disposalCard)
+deck_1 = Deck()
+''' #Shreyas was here again for 67 67 67

@@ -64,11 +64,11 @@ class Hand:
     def add_card(self, card):
         
         self.cards.append(card)
-    def pop_one(self, card, cards):
+    def pop_one(self, card, cards):#Shreyas was here for 67 67 67
         index = cards.index(card)
         cards.pop(index)
         self.cards = cards
-        return self.cards
+        return cards
     def show(self):
         return f"{self.owner}'s hand: {str(self.cards)}"
     
@@ -76,6 +76,7 @@ files = [ "C:\\Users\\SXL1151\\.streamlit\\secrets.toml", "C:\\Users\\SXL1151\\D
 players = []
 st.session_state.intro = True
 st.title("Rummy")
+set = []
 if "type" not in st.session_state:
     st.session_state.type = "Hi"
 if 'hand' not in st.session_state:
@@ -123,40 +124,70 @@ try:
             if st.session_state["press"] == True:
                 st.success("Game has started!")
                 once = True
-                deck_1 = Deck()
-                deck_1.create_deck()
-                deck_1.shuffle()
-                st.session_state.deck = deck_1.__repr__()
-                st.text(st.session_state.deck)
-                st.text(players)
-                for player in players:
-                    hand = Hand(player)
-                for i in range(cardsPerHand):  
-                    dealt = deck_1.deal_one()          
-                    hand.add_card(dealt)
-                hand2 = hand.show()
-                st.session_state.hand.append(hand.cards)
-                finDeck = (deck_1.__repr__())
-                finDeckStr = ""
-                for card in finDeck:
-                    finDeckStr = finDeckStr + " " + card
-                st.session_state.deck = finDeckStr
-                st.success(f"Deck: {st.session_state.deck}")
-                st.warning("Round 1")
-                st.warning(f"Please pass the device to {players[len(players)-(len(players))]}")
-                st.success(st.session_state.hand[0])
-                st.session_state.radio = st.radio("Pick a card to dispose", st.session_state.hand[0])
-                if st.session_state.radio != "TBD":
-                    with st.spinner("Loading..."):
-                        time.sleep(3)
-                    popped = hand.pop_one(st.session_state.radio, st.session_state.hand[0])
-                    st.session_state.hand[0] = hand.cards
-                    st.success(st.session_state.hand[0])
-                st.session_state.press = st.button("Confirm Selection")
-                if st.session_state.press:
-                    st.session_state.radio = st.radio("Pick a card to dispose", st.session_state.hand[0])
+                
+                
+                
 
 except:
     pass
+try:
+    deck_1 = Deck()
+    deck_1.create_deck()
+    deck_1.shuffle()
+    st.session_state.deck = deck_1.__repr__()
+    st.text(st.session_state.deck)
+    st.text(players)
+    for player in players:
+        hand = Hand(player)
+        for i in range(cardsPerHand):  
+            dealt = deck_1.deal_one()          
+            hand.add_card(dealt)
+            hand2 = hand.show()
+        st.session_state.hand.append(hand.cards)
+    finDeck = (deck_1.__repr__())
+    finDeckStr = ""
+    for card in finDeck:
+        finDeckStr = finDeckStr + " " + card
+    st.session_state.deck = finDeckStr
+    st.success(f"Deck: {st.session_state.deck}")
+    st.warning("Round 1")
+    st.warning(f"Please pass the device to {players[len(players)-(len(players))]}")
+    st.success(st.session_state.hand[0])
+    for card in st.session_state.hand[0]:
+        values = card[0]
+    set1 = []
+    row1 = []
+    for value in values:
+        count = values.count(value[0])
+        if count == 3 or count == 4:
+            set1.append(value)
+            for value2 in values:
+                if value2[0] == value[0]:
+                    set1.append(value2)
+            st.info(set1)
+        else:
+            valueset = 0
+            valueset = int(value[0])
+            type = value[1]
+            for value3 in values:
+                if value3[1] != type:
+                    break
+                else:
+                    if (int(value3[0]) - 1) == valueset:
+                        valueset = int(value3[0])
+                        row1.append(value)
+                        row1.append(value3)
+            st.info(row1)
 
 
+
+    st.session_state.radio = st.radio("Pick a card to dispose", st.session_state.hand[0])
+    with st.spinner("Loading...", show_time=True):
+        time.sleep(15)
+    popped = hand.pop_one(st.session_state.radio, st.session_state.hand[0])
+    st.success(st.session_state.hand[0])
+
+    
+    
+except Exception as ex:
+    st.error(ex)

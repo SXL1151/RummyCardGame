@@ -1,5 +1,4 @@
 import streamlit as st
-import toml
 import random
 import time
 values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
@@ -77,11 +76,22 @@ files = [ "C:\\Users\\SXL1151\\.streamlit\\secrets.toml", "C:\\Users\\SXL1151\\D
 players = []
 st.session_state.intro = True
 st.title("Rummy")
+if "type" not in st.session_state:
+    st.session_state.type = "Hi"
+if 'hand' not in st.session_state:
+    st.session_state.hand = []
+if "deck" not in st.session_state:
+    st.session_state.deck = "TBD"
+if "radio" not in st.session_state:
+    st.session_state.radio = "TBD"
+st.text(st.session_state.type)
+st.session_state.type = st.radio("Hi", ["hie", 'l'])
+st.text(st.session_state.type)
+
 st.markdown('''
             
             :red[Welcome to the rummy card game!]
             ''')
-   
 try:
     playerCt = st.selectbox("How many players will be playing?", ("2", "3", "4", "5", "6"))
     for i in range(int(playerCt)):
@@ -113,59 +123,40 @@ try:
             if st.session_state["press"] == True:
                 st.success("Game has started!")
                 once = True
-            
+                deck_1 = Deck()
+                deck_1.create_deck()
+                deck_1.shuffle()
+                st.session_state.deck = deck_1.__repr__()
+                st.text(st.session_state.deck)
+                st.text(players)
+                for player in players:
+                    hand = Hand(player)
+                for i in range(cardsPerHand):  
+                    dealt = deck_1.deal_one()          
+                    hand.add_card(dealt)
+                hand2 = hand.show()
+                st.session_state.hand.append(hand.cards)
+                finDeck = (deck_1.__repr__())
+                finDeckStr = ""
+                for card in finDeck:
+                    finDeckStr = finDeckStr + " " + card
+                st.session_state.deck = finDeckStr
+                st.success(f"Deck: {st.session_state.deck}")
+                st.warning("Round 1")
+                st.warning(f"Please pass the device to {players[len(players)-(len(players))]}")
+                st.success(st.session_state.hand[0])
+                st.session_state.radio = st.radio("Pick a card to dispose", st.session_state.hand[0])
+                if st.session_state.radio != "TBD":
+                    with st.spinner("Loading..."):
+                        time.sleep(3)
+                    popped = hand.pop_one(st.session_state.radio, st.session_state.hand[0])
+                    st.session_state.hand[0] = hand.cards
+                    st.success(st.session_state.hand[0])
+                st.session_state.press = st.button("Confirm Selection")
+                if st.session_state.press:
+                    st.session_state.radio = st.radio("Pick a card to dispose", st.session_state.hand[0])
 
 except:
     pass
-if once == True:
-    hands = []
-    deck_1 = Deck()
-    deck_1.create_deck()
-    deck_1.shuffle()
-    st.text(deck_1.__repr__())
-    st.text(players)
-    for player in players:
-        hand = Hand(player)
-        for i in range(cardsPerHand):  
-            dealt = deck_1.deal_one()          
-            hand.add_card(dealt)
-        hand2 = hand.show()
-        hands.append(hand.cards)
-    st.session_state.hands = hands
-    finDeck = (deck_1.__repr__())
-    finDeckStr = ""
-    for card in finDeck:
-        finDeckStr = finDeckStr + " " + card
-    st.success(f"Deck: {finDeckStr}")
-st.warning("Round 1")
-st.warning(f"Please pass the device to {players[len(players)-(len(players))]}")
-cardsUp = []
-'''
-st.error("Game will continue in 5 seconds")
 
-if once == True:
-    with st.spinner("Loading..."):
-        time.sleep(5)
-'''
-if once == True: #Shreyas was here lol
-    once = False
-if once == False:
-    while True:
-        st.text(f"Hand: {st.session_state.hands[0]}")
-        try:
-            option = st.radio("Pick an option", [f"select {cardsUp[0]} from the cards up deck", "Pick top card from cards down deck"])
-        except:
-            option = st.radio("Pick an option", ["Pick top card from cards down deck", "hi"])
-        disposalCard = st.radio("Pick a card to dispose", hands[0], key="disposalCard", on_change="disposalCard")
-        popped = hand.pop_one(st.session_state.disposalCard, hands[0])
-        hands[0] = hand.cards
-        st.text(hand.cards)
-        st.session_state.hands = hands
-        if st.session_state.disposalCard == disposalCard:
-            break
-        else:
-            continue
-'''
-cardsUp.append(disposalCard)
-deck_1 = Deck()
-''' #Shreyas was here again for 67 67 67
+

@@ -167,13 +167,15 @@ try:
             st.info(set1)
         else:
             valueset = 0
+            st.success(value[0])
             valueset = int(value[0])
-            type = value[1]
+            type = value[0]
             for value3 in values:
-                if value3[1] != type:
+                st.success("hi" + str(value3[0]))
+                if value3[0] != type:
                     break
                 else:
-                    if (int(value3[0]) - 1) == valueset:
+                    if ((int(value3[0]) - 1)) == valueset:
                         valueset = int(value3[0])
                         row1.append(value)
                         row1.append(value3)

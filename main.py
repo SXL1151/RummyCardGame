@@ -132,10 +132,10 @@ except:
     pass
 try:
     st.text(players)
-    st.session_state.deck = Deck()
-    st.session_state.deck.create_deck()
-    st.session_state.deck.shuffle()
-    st.session_state.deck.__repr__()
+    deck = Deck()
+    deck.create_deck()
+    deck.shuffle()
+    deck.__repr__()
     finDeckStr = ""
     for card in st.session_state.deck.__repr__():
         finDeckStr = finDeckStr + " " + card
@@ -143,7 +143,7 @@ try:
     for player in players:
         hand = Hand(player)
         for i in range(cardsPerHand):  
-            dealt = st.session_state.deck.deal_one()          
+            dealt = deck.deal_one()          
             hand.add_card(dealt)
             hand2 = hand.show()
         st.session_state.hand.append(hand.cards)

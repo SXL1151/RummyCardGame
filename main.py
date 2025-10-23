@@ -146,7 +146,7 @@ try:
             dealt = deck.deal_one()          
             hand.add_card(dealt)
             hand2 = hand.show()
-        st.session_state.hand.append(hand.cards)
+        st.session_state.hand = (hand.cards)
     st.success(f"Deck: {st.session_state.deck}")
     st.warning("Round 1")
     st.warning(f"Please pass the device to {players[len(players)-(len(players))]}")

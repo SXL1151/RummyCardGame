@@ -139,14 +139,14 @@ try:
     finDeckStr = ""
     for card in st.session_state.deck.__repr__():
         finDeckStr = finDeckStr + " " + card
-    st.session_state.deck.append(finDeckStr)
+    st.session_state.deck = (finDeckStr)
     for player in players:
         hand = Hand(player)
         for i in range(cardsPerHand):  
             dealt = deck.deal_one()          
             hand.add_card(dealt)
             hand2 = hand.show()
-        st.session_state.hand = (hand.cards)
+        st.session_state.hand.append(hand.cards)
     st.success(f"Deck: {st.session_state.deck}")
     st.warning("Round 1")
     st.warning(f"Please pass the device to {players[len(players)-(len(players))]}")

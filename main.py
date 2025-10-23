@@ -146,7 +146,6 @@ try:
             hand.add_card(dealt)
             hand2 = hand.show()
         st.session_state.hand.append(hand.cards)
-    
     st.session_state.deck = finDeckStr
     st.success(f"Deck: {st.session_state.deck}")
     st.warning("Round 1")

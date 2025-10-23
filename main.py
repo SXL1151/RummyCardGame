@@ -82,14 +82,7 @@ if "type" not in st.session_state:
 if 'hand' not in st.session_state:
     st.session_state.hand = []
 if "deck" not in st.session_state:
-    deck = Deck()
-    deck.create_deck()
-    deck.shuffle()
-    deck.__repr__()
-    finDeckStr = ""
-    for card in deck.__repr__():
-        finDeckStr = finDeckStr + " " + card
-    st.session_state.deck = finDeckStr
+    st.session_state.deck = "TBD"
 if "radio" not in st.session_state:
     st.session_state.radio = "TBD"
 if "topCard" not in st.session_state:
@@ -139,6 +132,14 @@ except:
     pass
 try:
     st.text(players)
+    deck = Deck()
+    deck.create_deck()
+    deck.shuffle()
+    deck.__repr__()
+    finDeckStr = ""
+    for card in deck.__repr__():
+        finDeckStr = finDeckStr + " " + card
+    st.session_state.deck = findDeckStr
     for player in players:
         hand = Hand(player)
         for i in range(cardsPerHand):  

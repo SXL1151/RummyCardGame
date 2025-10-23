@@ -137,7 +137,7 @@ try:
     st.session_state.deck.shuffle()
     st.session_state.deck.__repr__()
     finDeckStr = ""
-    for card in st.session_stat.deck.__repr__():
+    for card in st.session_state.deck.__repr__():
         finDeckStr = finDeckStr + " " + card
     st.session_state.deck.append(finDeckStr)
     for player in players:

@@ -139,7 +139,7 @@ try:
     finDeckStr = ""
     for card in deck.__repr__():
         finDeckStr = finDeckStr + " " + card
-    st.session_state.deck = finDeckStr
+    st.session_state.deck.append(finDeckStr)
     for player in players:
         hand = Hand(player)
         for i in range(cardsPerHand):  

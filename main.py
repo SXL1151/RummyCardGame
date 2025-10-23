@@ -132,10 +132,10 @@ except:
     pass
 try:
     st.text(players)
-    deck = Deck()
-    deck.create_deck()
-    deck.shuffle()
-    deck.__repr__()
+    st.session_state.deck = Deck()
+    st.session_state.deck.create_deck()
+    st.session_state.deck.shuffle()
+    st.session_state.deck.__repr__()
     finDeckStr = ""
     for card in deck.__repr__():
         finDeckStr = finDeckStr + " " + card

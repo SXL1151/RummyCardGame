@@ -82,7 +82,7 @@ if "type" not in st.session_state:
 if 'hand' not in st.session_state:
     st.session_state.hand = []
 if "deck" not in st.session_state:
-    st.session_state.deck = "TBD"
+    st.session_state.deck = []
 if "radio" not in st.session_state:
     st.session_state.radio = "TBD"
 if "topCard" not in st.session_state:

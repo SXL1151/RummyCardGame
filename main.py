@@ -82,14 +82,21 @@ if "type" not in st.session_state:
 if 'hand' not in st.session_state:
     st.session_state.hand = []
 if "deck" not in st.session_state:
-    st.session_state.deck = "TBD"
+    deck = Deck()
+    deck.create_deck()
+    deck.shuffle()
+    deck.__repr__()
+    finDeckStr = ""
+    for card in deck.__repr__():
+        finDeckStr = finDeckStr + " " + card
+    st.session_state.deck = finDeckStr
 if "radio" not in st.session_state:
     st.session_state.radio = "TBD"
-st.text(st.session_state.type)
-st.session_state.type = st.radio("Hi", ["hie", 'l'])
-st.text(st.session_state.type)
-
-st.markdown('''
+if "topCard" not in st.session_state:
+    st.session_state.topCard = "TBD"
+if "button" not in st.session_state:
+    st.session_state.button = False
+    st.markdown('''
             
             :red[Welcome to the rummy card game!]
             ''')
@@ -131,28 +138,39 @@ try:
 except:
     pass
 try:
-    deck_1 = Deck()
-    deck_1.create_deck()
-    deck_1.shuffle()
-    st.session_state.deck = deck_1.__repr__()
-    st.text(st.session_state.deck)
     st.text(players)
     for player in players:
         hand = Hand(player)
         for i in range(cardsPerHand):  
-            dealt = deck_1.deal_one()          
+            dealt = st.session_state.deck.deal_one()          
             hand.add_card(dealt)
             hand2 = hand.show()
         st.session_state.hand.append(hand.cards)
-    finDeck = (deck_1.__repr__())
-    finDeckStr = ""
-    for card in finDeck:
-        finDeckStr = finDeckStr + " " + card
+    
     st.session_state.deck = finDeckStr
     st.success(f"Deck: {st.session_state.deck}")
     st.warning("Round 1")
     st.warning(f"Please pass the device to {players[len(players)-(len(players))]}")
     st.success(st.session_state.hand[0])
+    '''
+    sets1 = []
+    single = False
+    for j, card in enumerate(st.session_state.hand[0]):
+        for i, card2 in enumerate(st.session_state.hand[0]):
+            if (card[0] == card2[0]) and (card2 not in sets1) and (card not in sets1) and (card != card2):
+                sets1.append(card)
+                st.session_state.hand[0].pop(j)
+                sets1.append(card2)
+                st.session_state.hand[0].pop(i)
+    for char in st.session_state.hand[0]:
+        sets1.append(char)
+    for i, val in enumerate(sets1):
+        for j, vals in enumerate(sets1):
+            if val == vals:
+                sets1.pop(j)
+                break
+    #st.session_state.hand[0] = sets1
+    st.info(sets1)
     for card in st.session_state.hand[0]:
         values = card[0]
     set1 = []
@@ -180,16 +198,28 @@ try:
                         row1.append(value)
                         row1.append(value3)
             st.info(row1)
-
-
-
-    st.session_state.radio = st.radio("Pick a card to dispose", st.session_state.hand[0])
-    with st.spinner("Loading...", show_time=True):
-        time.sleep(15)
-    popped = hand.pop_one(st.session_state.radio, st.session_state.hand[0])
-    st.success(st.session_state.hand[0])
+'''
+    if st.session_state.button == False:
+        disposed = ""
+        if disposed != "":
+            st.session_state.topCard = st.pills("Pick a new card", ["Select from disposal pile", "Select from deck"])
+        else:
+            st.session_state.topCard = st.pills("Pick a new card", ["Select from deck"])
+        if st.session_state.topCard:
+            st.session_state.radio = "TBD"
+        st.session_state.radio = st.radio("Pick a card to dispose", st.session_state.hand[0])
+        disposed = st.session_state.radio
+        st.info(f"Disposed card: {disposed}")
+        if st.button("Confirm"):
+            st.session_state.button = True
+    if st.session_state.button == True:
+        new_hand = hand.pop_one(st.session_state.radio, st.session_state.hand[0])
+        st.session_state.hand[0] = new_hand
+        st.success(f"New Hand: {st.session_state.hand[0]}")
+        
+    
 
     
     
 except Exception as ex:
-    st.error(ex)
+    st.text(ex)

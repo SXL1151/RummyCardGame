@@ -35,18 +35,18 @@ class Deck:
         card = random.choice(self.cards)
         index = self.cards.index(card)
         self.cards.pop(index)
-        return self.cards
+        return card
     def pop_one(self, card, cards):
         index = cards.index(card)
         cards.pop(index)
         
-class Hand:
+class Hand():
     def __init__(self, owner="Player"):
         self.owner = owner
         self.cards = []
     def add_card(self, card):
-        
         self.cards.append(card)
+        return self.cards
     def pop_one(self, card, cards):#Shreyas was here for 67 67 67
         index = cards.index(card)
         cards.pop(index)
@@ -84,6 +84,10 @@ if "deckFin" not in st.session_state:
     st.session_state.deckFin = ""
 if "disposed" not in st.session_state:
     st.session_state.disposed = []
+if "showCards" not in st.session_state:
+    st.session_state.showCards = False
+if "clicks" not in st.session_state:
+    st.session_state.clicks = 0
 st.markdown('''  
         :red[Welcome to the rummy card game!]
         ''')
@@ -125,21 +129,23 @@ try:
         st.session_state.deck.__repr__()
         st.session_state.shuffle = False
         deck = "" 
-        for card in st.session_state.deck.__repr__():
+        for card in st.session_state.deck.cards:
             st.session_state.deckFin = st.session_state.deckFin + " " + card
+        #st.session_state.deck.cards = st.session_state.deckFin
+        st.warning(st.session_state.deck.cards)
         for player in players:
             hand = Hand(player)
+            bin = []
             for i in range(cardsPerHand):
                 dealt = st.session_state.deck.deal_one()          
-                hand.add_card(dealt)
-                hand.show()
-            st.session_state.hand.append(hand.cards)
+                bin.append(hand.add_card(dealt))
+            st.session_state.hand.append(bin)
         st.success(f"Deck: {st.session_state.deckFin}")
         while True:
             for i, player in enumerate(players):
                 st.warning(f"Round {i+1}")
                 st.warning(f"Please pass the device to {player}")
-                st.success(st.session_state.hand[0][0][:cardsPerHand*(i+1)])
+                st.success(st.session_state.hand[0][0][:cardsPerHand])
                 '''
                 sets1 = []
                 single = False
@@ -189,28 +195,48 @@ try:
             '''
                 if st.session_state.button == False:
                     disposed = ""
+                    #Learned st.column through AI(ChatGPT)
+                    #I did not copy and paste, rather I learned the concept and applied to my code
                     col1, col2, col3 = st.columns(3)
+                    subcol1, subcol2, subcol3, subcol4, subcol5, subcol6 = st.columns(6)
                     with col1:
                         if disposed != "":
-                            st.session_state.topCard = st.pills("Draw a new card", ["Select from disposal pile", "Select from deck"], key=f"pill {i}")
+                            st.session_state.topCard = st.pills("Draw a new card", ["Select from disposal pile", "Select from deck"], key=f"pill {st.session_state.clicks}")
                         else:
-                            st.session_state.topCard = st.pills("Draw a new card", ["Select from deck"], key=f"pill2 {i}")
+                            st.session_state.topCard = st.pills("Draw a new card", ["Select from deck"], key=f"pill2 {st.session_state.clicks}")
                         if st.session_state.topCard:
                             st.session_state.radio = "TBD"
                     with col2:
-                        st.session_state.radio = st.radio("Pick a card to dispose", st.session_state.hand[0][0][:cardsPerHand*(i+1)], key=f"radio {i}")
+                        st.session_state.radio = st.radio("Pick a card to dispose", st.session_state.hand[0][0][:cardsPerHand], key=f"radio {st.session_state.clicks}")
                         
                         
                     with col3:
-                        
-                        
-                        if st.button("Confirm", key=f"button {i}"):
+                        with subcol2:
+                            if st.session_state.showCards ==False:
+                                st.image("https://i.ebayimg.com/images/g/MjgAAOSw2OliE9eG/s-l1200.jpg")
+                            else:
+                                st.warning("com")
+                            st.checkbox("", key=f"box{st.session_state.clicks}")
+                        with subcol3:
+                            if st.session_state.showCards == False:
+                                st.image("https://i.ebayimg.com/images/g/MjgAAOSw2OliE9eG/s-l1200.jpg")
+                            else:
+                                st.warning("com")
+                            st.checkbox("", key=f"box1{st.session_state.clicks}")
+                        with subcol4:
+                            if st.session_state.showCards == False:
+                                st.image("https://i.ebayimg.com/images/g/MjgAAOSw2OliE9eG/s-l1200.jpg")
+                            else:
+                                st.warning("com")
+                            st.checkbox("", key=f"box2{st.session_state.clicks}")
+                    
+                        if st.button("Confirm", key=f"button {st.session_state.clicks}"):
+                            st.session_state.clicks += 1
                             st.session_state.disposed.append(st.session_state.radio)
                             st.info(f"Disposed card: {st.session_state.radio}")
                             st.session_state.button = True
                         if st.session_state.button == True:
-
-                            new_hand = hand.pop_one(st.session_state.radio, st.session_state.hand[0][0][:cardsPerHand*(i+1)])
+                            new_hand = hand.pop_one(st.session_state.radio, st.session_state.hand[0][0][:cardsPerHand])
                             if st.session_state.topCard == "select from deck":
                                 new_card = st.session_state.deck.cards[0]
                             else:
@@ -225,9 +251,9 @@ try:
                         else:
                             st.error("Please complete choose an option to draw a new card")
                             st.session_state.button = False
-except:
-    pass
-                    
+except Exception as ex:
+    st.info(ex)
+
                 
 
                 

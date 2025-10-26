@@ -88,6 +88,25 @@ if "showCards" not in st.session_state:
     st.session_state.showCards = False
 if "clicks" not in st.session_state:
     st.session_state.clicks = 0
+Clubs = "https://www.tekeye.uk/playing_cards/images/svg_playing_cards/fronts/png_96_dpi/clubs"
+Spades = "https://www.tekeye.uk/playing_cards/images/svg_playing_cards/fronts/png_96_dpi/spades"
+SpadesSimple = "https://www.tekeye.uk/playing_cards/images/svg_playing_cards/other/png_96_dpi/spades"
+Hearts = "https://www.tekeye.uk/playing_cards/images/svg_playing_cards/fronts/png_96_dpi/hearts"
+Diamonds = "https://www.tekeye.uk/playing_cards/images/svg_playing_cards/fronts/png_96_dpi/diamonds"
+Ac = "_ace.png"
+Two = "_2.png"
+Three = "_3.png"
+Four = "_4.png"
+Five = "_5.png"
+Six = "_6.png"
+Seven = "_7.png"
+Eight = "_8.png"
+Nine = "_9.png"
+Ten = "_10.png"
+Jack = "_jack.png"
+Queen = "_queen.png"
+King = "_king.png"
+Asimple = "_ace_simple.png"
 st.markdown('''  
         :red[Welcome to the rummy card game!]
         ''')
@@ -141,118 +160,120 @@ try:
                 bin.append(hand.add_card(dealt))
             st.session_state.hand.append(bin)
         st.success(f"Deck: {st.session_state.deckFin}")
-        while True:
-            for i, player in enumerate(players):
-                st.warning(f"Round {i+1}")
-                st.warning(f"Please pass the device to {player}")
-                st.success(st.session_state.hand[0][0][:cardsPerHand])
-                '''
-                sets1 = []
-                single = False
-                for j, card in enumerate(st.session_state.hand[0]):
-                    for i, card2 in enumerate(st.session_state.hand[0]):
-                        if (card[0] == card2[0]) and (card2 not in sets1) and (card not in sets1) and (card != card2):
-                            sets1.append(card)
-                            st.session_state.hand[0].pop(j)
-                            sets1.append(card2)
-                            st.session_state.hand[0].pop(i)
-                for char in st.session_state.hand[0]:
-                    sets1.append(char)
-                for i, val in enumerate(sets1):
-                    for j, vals in enumerate(sets1):
-                        if val == vals:
-                            sets1.pop(j)
-                            break
-                #st.session_state.hand[0] = sets1
-                st.info(sets1)
-                for card in st.session_state.hand[0]:
-                    values = card[0]
-                set1 = []
-                row1 = []
-                for value in values:
-                    count = values.count(value[0])
-                    if count == 3 or count == 4:
-                        set1.append(value)
-                        for value2 in values:
-                            if value2[0] == value[0]:
-                                set1.append(value2)
-                        st.info(set1)
-                    else:
-                        valueset = 0
-                        st.success(value[0])
-                        valueset = int(value[0])
-                        type = value[0]
-                        for value3 in values:
-                            st.success("hi" + str(value3[0]))
-                            if value3[0] != type:
-                                break
-                            else:s
-                                if ((int(value3[0]) - 1)) == valueset:
-                                    valueset = int(value3[0])
-                                    row1.append(value)
-                                    row1.append(value3)
-                        st.info(row1)
+        for i, player in enumerate(players):
+            st.warning(f"Round {i+1}")
+            st.warning(f"Please pass the device to {player}")
+            st.success(st.session_state.hand[0][0][:cardsPerHand])
             '''
-                if st.session_state.button == False:
-                    disposed = ""
-                    #Learned st.column through AI(ChatGPT)
-                    #I did not copy and paste, rather I learned the concept and applied to my code
-                    col1, col2, col3 = st.columns(3)
-                    subcol1, subcol2, subcol3, subcol4, subcol5, subcol6 = st.columns(6)
-                    with col1:
-                        if disposed != "":
-                            st.session_state.topCard = st.pills("Draw a new card", ["Select from disposal pile", "Select from deck"], key=f"pill {st.session_state.clicks}")
-                        else:
-                            st.session_state.topCard = st.pills("Draw a new card", ["Select from deck"], key=f"pill2 {st.session_state.clicks}")
-                        if st.session_state.topCard:
-                            st.session_state.radio = "TBD"
-                    with col2:
-                        st.session_state.radio = st.radio("Pick a card to dispose", st.session_state.hand[0][0][:cardsPerHand], key=f"radio {st.session_state.clicks}")
-                        
-                        
-                    with col3:
-                        with subcol2:
-                            if st.session_state.showCards ==False:
-                                st.image("https://i.ebayimg.com/images/g/MjgAAOSw2OliE9eG/s-l1200.jpg")
-                            else:
-                                st.warning("com")
-                            st.checkbox("", key=f"box{st.session_state.clicks}")
-                        with subcol3:
-                            if st.session_state.showCards == False:
-                                st.image("https://i.ebayimg.com/images/g/MjgAAOSw2OliE9eG/s-l1200.jpg")
-                            else:
-                                st.warning("com")
-                            st.checkbox("", key=f"box1{st.session_state.clicks}")
-                        with subcol4:
-                            if st.session_state.showCards == False:
-                                st.image("https://i.ebayimg.com/images/g/MjgAAOSw2OliE9eG/s-l1200.jpg")
-                            else:
-                                st.warning("com")
-                            st.checkbox("", key=f"box2{st.session_state.clicks}")
+            sets1 = []
+            single = False
+            for j, card in enumerate(st.session_state.hand[0]):
+                for i, card2 in enumerate(st.session_state.hand[0]):
+                    if (card[0] == card2[0]) and (card2 not in sets1) and (card not in sets1) and (card != card2):
+                        sets1.append(card)
+                        st.session_state.hand[0].pop(j)
+                        sets1.append(card2)
+                        st.session_state.hand[0].pop(i)
+            for char in st.session_state.hand[0]:
+                sets1.append(char)
+            for i, val in enumerate(sets1):
+                for j, vals in enumerate(sets1):
+                    if val == vals:
+                        sets1.pop(j)
+                        break
+            #st.session_state.hand[0] = sets1
+            st.info(sets1)
+            for card in st.session_state.hand[0]:
+                values = card[0]
+            set1 = []
+            row1 = []
+            for value in values:
+                count = values.count(value[0])
+                if count == 3 or count == 4:
+                    set1.append(value)
+                    for value2 in values:
+                        if value2[0] == value[0]:
+                            set1.append(value2)
+                    st.info(set1)
+                else:
+                    valueset = 0
+                    st.success(value[0])
+                    valueset = int(value[0])
+                    type = value[0]
+                    for value3 in values:
+                        st.success("hi" + str(value3[0]))
+                        if value3[0] != type:
+                            break
+                        else:s
+                            if ((int(value3[0]) - 1)) == valueset:
+                                valueset = int(value3[0])
+                                row1.append(value)
+                                row1.append(value3)
+                    st.info(row1)
+        '''
+            if st.session_state.button == False:
+                disposed = ""
+                #Learned st.column through AI(ChatGPT)
+                #I did not copy and paste, rather I learned the concept and applied to my code
+                col1, col2, col3 = st.columns(3)
+                subcol1, subcol2, subcol3, subcol4, subcol5, subcol6 = st.columns(6)
+                with col1:
+                    if disposed != "":
+                        st.session_state.topCard = st.pills("Draw a new card", ["Select from disposal pile", "Select from deck"], key=f"pill {st.session_state.clicks}")
+                    else:
+                        st.session_state.topCard = st.pills("Draw a new card", ["Select from deck"], key=f"pill2 {st.session_state.clicks}")
+                    if st.session_state.topCard:
+                        st.session_state.radio = "TBD"
                     
-                        if st.button("Confirm", key=f"button {st.session_state.clicks}"):
-                            st.session_state.clicks += 1
-                            st.session_state.disposed.append(st.session_state.radio)
-                            st.info(f"Disposed card: {st.session_state.radio}")
-                            st.session_state.button = True
-                        if st.session_state.button == True:
-                            new_hand = hand.pop_one(st.session_state.radio, st.session_state.hand[0][0][:cardsPerHand])
-                            if st.session_state.topCard == "select from deck":
-                                new_card = st.session_state.deck.cards[0]
-                            else:
-                                new_card = st.session_state.disposed[0]
-                                st.session_state.disposed.pop(0)
-                            new_hand.append(new_card)
-                            st.session_state.hand[0][0][:cardsPerHand] = new_hand
-                    if st.session_state.button == True:
-                        if st.session_state.topCard != None:
-                            st.success(f"New Hand: {st.session_state.hand[0][0][:cardsPerHand*(i+1)]}")
-                            st.button("Pass to next person")
+                with col2:
+                    st.session_state.radio = st.radio("Pick a card to dispose", st.session_state.hand[0][0][:cardsPerHand], key=f"radio {st.session_state.clicks}")
+                    with subcol2:
+                        if st.session_state.showCards ==False:
+                            st.image("https://i.ebayimg.com/images/g/MjgAAOSw2OliE9eG/s-l1200.jpg")
                         else:
-                            st.error("Please complete choose an option to draw a new card")
-                            st.session_state.button = False
+                            st.image(Diamonds + Five)
+                        st.checkbox("", key=f"box{st.session_state.clicks}")
+                    with subcol3:
+                        if st.session_state.showCards == False:
+                            st.image("https://i.ebayimg.com/images/g/MjgAAOSw2OliE9eG/s-l1200.jpg")
+                        else:
+                            st.image(Diamonds + Five)
+                        st.checkbox("", key=f"box1{st.session_state.clicks}")
+                    with subcol4:
+                        if st.session_state.showCards == False:
+                            st.image("https://i.ebayimg.com/images/g/MjgAAOSw2OliE9eG/s-l1200.jpg")
+                        else:
+                            st.image(Diamonds + Five)
+                        st.checkbox("", key=f"box2{st.session_state.clicks}")
+                    
+                with col3:
+                    if st.button("Confirm", key=f"button {st.session_state.clicks}"):
+                        st.session_state.clicks += 1
+                        st.session_state.disposed.append(st.session_state.radio)
+                        st.info(f"Disposed card: {st.session_state.radio}")
+                        st.session_state.button = True
+                    if st.button("Show Cards"):
+                        st.session_state.showCards = True
+                    if st.button("Hide Cards"):
+                        st.session_state.showCards = False
+                    if st.session_state.button == True:
+                        new_hand = hand.pop_one(st.session_state.radio, st.session_state.hand[0][0][:cardsPerHand])
+                        if st.session_state.topCard == "select from deck":
+                            new_card = st.session_state.deck.cards[0]
+                        else:
+                            new_card = st.session_state.disposed[0]
+                            st.session_state.disposed.pop(0)
+                        new_hand.append(new_card)
+                        st.session_state.hand[0][0][:cardsPerHand] = new_hand
+                if st.session_state.button == True:
+                    if st.session_state.topCard != None:
+                        st.success(f"New Hand: {st.session_state.hand[0][0][:cardsPerHand*(i+1)]}")
+                        st.button("Pass to next person")
+                    else:
+                        st.error("Please complete choose an option to draw a new card")
+                        st.session_state.button = False
 except Exception as ex:
-    st.info(ex)
+    pass
 
                 
 

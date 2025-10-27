@@ -1,4 +1,5 @@
 [theme]
+backgroundColor = "black"
 baseRadius = "full"
 textColor = "black"
 primaryColor = "slateGray"

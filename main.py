@@ -574,12 +574,12 @@ try:
                     if st.session_state.topCard != None:
                         st.success(f"New Hand: {st.session_state.hand[0][0][cardsPerHand*i: cardsPerHand*(i+1)]}")
                         st.button("Pass to next person")
-                        st.session_state.press = True
+                        st.session_state.button = True
                         st.session_state.clicks += 1
                         continue
                     else:
                         st.error("Please complete choose an option to draw a new card")
-                        st.session_state.press = False
+                        st.session_state.button = False
 except Exception as ex:
     st.error(ex)
 

@@ -147,10 +147,12 @@ try:
         st.session_state.deck.__repr__()
         st.session_state.shuffle = False
         deck = "" 
+        st.info(st.session_state.deck.cards)
         for card in st.session_state.deck.cards:
             st.session_state.deckFin = st.session_state.deckFin + " " + card
         #st.session_state.deck.cards = st.session_state.deckFin
         st.warning(st.session_state.deck.cards)
+
         for player in players:
             hand = Hand(player)
             bin = []
@@ -158,6 +160,7 @@ try:
                 dealt = st.session_state.deck.deal_one()          
                 bin.append(hand.add_card(dealt))
             st.session_state.hand.append(bin)
+        
         st.success(f"Deck: {st.session_state.deckFin}")
         for i, player in enumerate(players):
             if st.session_state.button == True:
@@ -322,6 +325,7 @@ try:
                             new_card = st.session_state.deck.cards[0]
                             st.warning(new_card)
                         else:
+
                             new_card = st.session_state.disposed[0]
                             st.session_state.disposed.pop(0)
                             st.info(new_card)

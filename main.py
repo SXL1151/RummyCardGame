@@ -36,8 +36,8 @@ class Deck:
         return card
     def pop_one(self, card, cards):
         index = cards.index(card)
-        self.cards.pop(index)
         cards.pop(index)
+        self.cards = cards
         return cards
 class Hand():
     def __init__(self, owner="Player"):

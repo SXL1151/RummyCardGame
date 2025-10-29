@@ -141,10 +141,11 @@ try:
 except Exception as ex:
     st.info(ex)
 try:
-    st.session_state.deck = Deck()
-    st.session_state.deck.create_deck()
-    st.session_state.deck.shuffle()
-    st.session_state.deck.__repr__()
+    if st.session_state.press == False:
+        st.session_state.deck = Deck()
+        st.session_state.deck.create_deck()
+        st.session_state.deck.shuffle()
+        st.session_state.deck.__repr__()
     if st.session_state.press == True:
         st.session_state.shuffle = False
         deck = "" 

@@ -145,6 +145,7 @@ try:
     st.session_state.deck.create_deck()
     st.session_state.deck.shuffle()
     st.session_state.deck.__repr__()
+    if st.session_state.button == True:
         deck = "" 
         for player in players:
             hand = Hand(player)

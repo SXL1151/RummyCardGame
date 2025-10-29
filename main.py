@@ -33,13 +33,11 @@ class Deck:
         if self.cards == "":
             return None
         card = random.choice(self.cards)
-        index = self.cards.index(card)
-        self.cards.pop(index)
         return card
     def pop_one(self, card, cards):
         index = cards.index(card)
         cards.pop(index)
-        
+        return cards
 class Hand():
     def __init__(self, owner="Player"):
         self.owner = owner
@@ -88,6 +86,8 @@ if "showCards" not in st.session_state:
     st.session_state.showCards = False
 if "clicks" not in st.session_state:
     st.session_state.clicks = 0
+if "bin" not in st.session_state:
+    st.session_state.bin = []
 Clubs = "https://www.tekeye.uk/playing_cards/images/svg_playing_cards/fronts/png_96_dpi/clubs"
 Spades = "https://www.tekeye.uk/playing_cards/images/svg_playing_cards/fronts/png_96_dpi/spades"
 SpadesSimple = "https://www.tekeye.uk/playing_cards/images/svg_playing_cards/other/png_96_dpi/spades"
@@ -147,26 +147,20 @@ try:
         st.session_state.deck.__repr__()
         st.session_state.shuffle = False
         deck = "" 
-        st.info(st.session_state.deck.cards)
-        for card in st.session_state.deck.cards:
-            st.session_state.deckFin = st.session_state.deckFin + " " + card
-        #st.session_state.deck.cards = st.session_state.deckFin
-        st.warning(st.session_state.deck.cards)
-
         for player in players:
             hand = Hand(player)
-            bin = []
             for i in range(20):
-                dealt = st.session_state.deck.deal_one()          
-                bin.append(hand.add_card(dealt))
-            st.session_state.hand.append(bin)
-        
+                dealt = st.session_state.deck.deal_one() 
+                popped = st.session_state.deck.pop_one(dealt, st.session_state.deck.cards)         
+                st.session_state.bin.append(hand.add_card(dealt))
+            st.session_state.hand.append(st.session_state.bin)
+        for card in st.session_state.deck.cards:
+            st.session_state.deckFin = st.session_state.deckFin + " " + card
         st.success(f"Deck: {st.session_state.deckFin}")
         for i, player in enumerate(players):
             if st.session_state.button == True:
                 st.warning(f"Round {i+1}")
                 st.warning(f"Please pass the device to {player}")
-                st.success(st.session_state.hand[0][0])
                 disposed = ""
                 #Learned st.column through AI(ChatGPT)
                 #I did not copy and paste, rather I learned the concept and applied to my code
@@ -270,11 +264,11 @@ try:
                                     else:
                                         st.image(Diamonds + Nine)
                                 if cardList[0] + cardList[1] == "10":
-                                    if cardList[1] == "S":
+                                    if cardList[2] == "S":
                                         st.image(Spades + Ten)
-                                    elif cardList[1] == "C":
+                                    elif cardList[2] == "C":
                                         st.image(Clubs + Ten)
-                                    elif cardList[1] == "H":
+                                    elif cardList[2] == "H":
                                         st.image(Hearts + Ten)
                                     else:
                                         st.image(Diamonds + Ten)
@@ -305,11 +299,11 @@ try:
                                         st.image(Hearts + King)
                                     else:
                                         st.image(Diamonds + King)
-                            st.checkbox("", key=f"box2{st.session_state.clicks}{j}")
+                            st.checkbox("", key=f"box 2{st.session_state.clicks}{j}{i}")
                             continue
-                    
+                st.divider()
                 with col3:
-                    if st.button("Confirm", key=f"button {st.session_state.clicks}"):
+                    if st.button("Confirm", key=f"button {st.session_state.clicks}{i}{j}"):
                         st.session_state.disposed.append(st.session_state.radio)
                         st.info(f"Disposed card: {st.session_state.radio}")
                         st.session_state.button = False
@@ -334,7 +328,6 @@ try:
                 if st.session_state.button == False:
                     if st.session_state.topCard != None:
                         st.success(f"New Hand: {st.session_state.hand[0][0][cardsPerHand*i: cardsPerHand*(i+1)]}")
-                        st.session_state.radio = st.radio("Pick a card to dispose", st.session_state.hand[0][0][cardsPerHand*i: cardsPerHand*(i+1)], key=f"radio {st.session_state.clicks}{i}{j}")
                     for j, card in enumerate(st.session_state.hand[0][0][cardsPerHand*i: cardsPerHand*(i+1)]):
                         cardList = list(card)
                         with subColList[(j*0)+j]:
@@ -423,11 +416,11 @@ try:
                                     else:
                                         st.image(Diamonds + Nine)
                                 if cardList[0] + cardList[1] == "10":
-                                    if cardList[1] == "S":
+                                    if cardList[2] == "S":
                                         st.image(Spades + Ten)
-                                    elif cardList[1] == "C":
+                                    elif cardList[2] == "C":
                                         st.image(Clubs + Ten)
-                                    elif cardList[1] == "H":
+                                    elif cardList[2] == "H":
                                         st.image(Hearts + Ten)
                                     else:
                                         st.image(Diamonds + Ten)
@@ -458,7 +451,7 @@ try:
                                         st.image(Hearts + King)
                                     else:
                                         st.image(Diamonds + King)
-                            st.checkbox("", key=f"box{st.session_state.clicks}{j}")
+                            st.checkbox("", key=f"box 4{st.session_state.clicks}{j}")
                             continue
                             
                             

@@ -6,7 +6,7 @@ nameError = True
 # List of possible suits (H = Hearts, S = Spades, C = Clubs, D = Diamonds)
 suits = ["H", "S", "C", "D"]
 
-class Card:
+class Card:   #Creates the cards and stores
     def __init__(self, v, s):
         self.value = v
         self.suit = s
@@ -16,49 +16,49 @@ class Card:
 
 
 class Deck:
-    def __init__(self):
+    def __init__(self):  #Initializes self.cards for the deck
         self.cards = []
         pass
-    def create_deck(self):
+    def create_deck(self): #Creates the deck
         for s in suits:
             for v in values:
                 self.cards.append(f"{v}{s}")
         return self.cards
-    def __repr__(self):
+    def __repr__(self):  #Returns self.card
         return self.cards
-    def shuffle(self):
+    def shuffle(self):   #Shuffles the deck
         random.shuffle(self.cards)
         return (self)
-    def deal_one(self):
+    def deal_one(self):   #Randomely deals a card
         if self.cards == "":
             return None
         card = random.choice(self.cards)
         return card
-    def pop_one(self, card, cards):
+    def pop_one(self, card, cards):   #When called, this functions pops a card from the deck
         index = cards.index(card)
         cards.pop(index)
         self.cards = cards
         return cards
 class Hand():
-    def __init__(self, owner="Player"):
+    def __init__(self, owner="Player"):  #Initializes the hand and its owner
         self.owner = owner
         self.cards = []
-    def add_card(self, card):
+    def add_card(self, card):  #Adds a card to the hand
         self.cards.append(card)
         return self.cards
-    def pop_one(self, card, cards):#Shreyas was here for 67 67 67
+    def pop_one(self, card, cards):#Pops a card from the hand
         index = cards.index(card)
         cards.pop(index)
         self.cards = cards
         return cards
-    def show(self):
+    def show(self): #Returns the hand as a string
         return f"{self.owner}'s hand: {str(self.cards)}"
     
-files = [ "C:\\Users\\SXL1151\\.streamlit\\secrets.toml", "C:\\Users\\SXL1151\\Desktop\\.streamlit\\secrets.toml",]
 players = []
 st.session_state.intro = True
 st.title("Gin Rummy")
 set = []
+#Lines 62-91 initializes variables that would not get affected if the player reruns the games; saves the variables in session state.
 if "type" not in st.session_state:
     st.session_state.type = "Hi"
 if 'hand' not in st.session_state:
@@ -89,11 +89,13 @@ if "clicks" not in st.session_state:
     st.session_state.clicks = 0
 if "bin" not in st.session_state:
     st.session_state.bin = []
+#Lines 93 - 97; base url to get the images of cards
 Clubs = "https://www.tekeye.uk/playing_cards/images/svg_playing_cards/fronts/png_96_dpi/clubs"
 Spades = "https://www.tekeye.uk/playing_cards/images/svg_playing_cards/fronts/png_96_dpi/spades"
 SpadesSimple = "https://www.tekeye.uk/playing_cards/images/svg_playing_cards/other/png_96_dpi/spades"
 Hearts = "https://www.tekeye.uk/playing_cards/images/svg_playing_cards/fronts/png_96_dpi/hearts"
 Diamonds = "https://www.tekeye.uk/playing_cards/images/svg_playing_cards/fronts/png_96_dpi/diamonds"
+#Lines 99 - 112; attaches the string to the end of one of the base url and the full image url is created and can be called easily.
 Ac = "_ace.png"
 Two = "_2.png"
 Three = "_3.png"
@@ -118,12 +120,12 @@ try:
         if name == "":
             players.append(f"Player {i+1}")
         elif name in players:
-            st.error("Names cannot be the same(add unique identifier)")
+            st.error("Names cannot be the same(add unique identifier)") #Players enter names and the code checks for similar names
             st.session_state.nameError = True
         else:
             players.append(name)
             st.session_state.nameError = False
-    if st.session_state.nameError == False:
+    if st.session_state.nameError == False: #If there is no name error, the following code continues
         st.text(f"{playerCt} players will be playing")
         cardsPerHand = 10
         st.success(f"Each player will recieve {cardsPerHand} cards")
@@ -141,7 +143,7 @@ try:
 except Exception as ex:
     st.info(ex)
 try:
-    st.session_state.deck = Deck()
+    st.session_state.deck = Deck() #Creates a deck object in a session state variable(so that the deck doesn't keep on changing)
     st.session_state.deck.create_deck()
     st.session_state.deck.shuffle()
     st.session_state.deck.__repr__()
@@ -151,14 +153,14 @@ try:
             hand = Hand(player)
             for i in range(20):
                 dealt = st.session_state.deck.deal_one() 
-                popped = st.session_state.deck.pop_one(dealt, st.session_state.deck.cards)         
+                popped = st.session_state.deck.pop_one(dealt, st.session_state.deck.cards)        #Creates hands for both players 
                 st.session_state.bin.append(hand.add_card(dealt))
             st.session_state.hand.append(st.session_state.bin)
         for card in st.session_state.deck.cards:
             st.session_state.deckFin = st.session_state.deckFin + " " + card
         st.success(f"Deck: {st.session_state.deckFin}")
         while True:
-            for i, player in enumerate(players):
+            for i, player in enumerate(players): #Game starts
                 if st.session_state.button == True:
                     st.warning(f"Round {i+1}")
                     st.warning(f"Please pass the device to {player}")
@@ -167,19 +169,19 @@ try:
                     #I did not copy and paste, rather I learned the concept and applied to my code
                     col1, col2, col3 = st.columns(3)
                     subcol1, subcol2, subcol3, subcol4, subcol5 = st.columns(5)
-                    subColList = [subcol1, subcol2, subcol3, subcol4, subcol5,subcol1, subcol2, subcol3, subcol4, subcol5]
+                    subColList = [subcol1, subcol2, subcol3, subcol4, subcol5,subcol1, subcol2, subcol3, subcol4, subcol5] #To align the interactive objects
                     with col1:
-                        if disposed != "":
+                        if disposed != "": #Asks player to draw from deck or disposal pile
                             st.session_state.topCard = st.pills("Draw a new card", ["Select from disposal pile", "Select from deck"], key=f"pill {st.session_state.clicks}{i}")
                         else:
                             st.session_state.topCard = st.pills("Draw a new card", ["Select from deck"], key=f"pill2 {st.session_state.clicks}{i}")
                         if st.session_state.topCard:
                             st.session_state.radio = "TBD"
                     with col2:
-                        st.session_state.radio = st.radio("Pick a card to dispose", st.session_state.hand[0][0][cardsPerHand*i: cardsPerHand*(i+1)], key=f"radio {st.session_state.clicks}{i}")
+                        st.session_state.radio = st.radio("Pick a card to dispose", st.session_state.hand[0][0][cardsPerHand*i: cardsPerHand*(i+1)], key=f"radio {st.session_state.clicks}{i}") #Asks player for a card to dispose
                         for j, card in enumerate(st.session_state.hand[0][0][cardsPerHand*i: cardsPerHand*(i+1)]):
                             cardList = list(card)
-                            with subColList[(j*0)+j]:
+                            with subColList[(j*0)+j]: #The following code creates an image for each card in the players hand
                                 if st.session_state.showCards == False:
                                     st.image("https://i.ebayimg.com/images/g/MjgAAOSw2OliE9eG/s-l1200.jpg")
                                 else:
@@ -303,7 +305,7 @@ try:
                                 st.checkbox("", key=f"box 2{st.session_state.clicks}{j}{i}")
                                 continue
                     st.divider()
-                    with col3:
+                    with col3:#Includes options to confirm, show cards, and hide cards
                         if st.button("Confirm", key=f"button {st.session_state.clicks}{i}{j}"):
                             st.session_state.disposed.append(st.session_state.radio)
                             st.info(f"Disposed card: {st.session_state.radio}")
@@ -320,7 +322,6 @@ try:
                                 new_card = st.session_state.deck.cards[0]
                                 st.warning(new_card)
                             else:
-
                                 new_card = st.session_state.disposed[0]
                                 st.session_state.disposed.pop(0)
                                 st.info(new_card)
@@ -328,10 +329,10 @@ try:
                             st.session_state.hand[0][0][:cardsPerHand] = new_hand
                     if st.session_state.button == False:
                         if st.session_state.topCard != None:
-                            st.success(f"New Hand: {st.session_state.hand[0][0][cardsPerHand*i: cardsPerHand*(i+1)]}")
+                            st.success(f"New Hand: {st.session_state.hand[0][0][cardsPerHand*i: cardsPerHand*(i+1)]}")#Shows the player their new hand
                         for j, card in enumerate(st.session_state.hand[0][0][cardsPerHand*i: cardsPerHand*(i+1)]):
                             cardList = list(card)
-                            with subColList[(j*0)+j]:
+                            with subColList[(j*0)+j]:#Provides images for updated hand
                                 if st.session_state.showCards == False:
                                     st.image("https://i.ebayimg.com/images/g/MjgAAOSw2OliE9eG/s-l1200.jpg")
                                 else:
@@ -454,15 +455,15 @@ try:
                                             st.image(Diamonds + King)
                                 st.checkbox("", key=f"box 4{st.session_state.clicks}{j}")
                                 continue
-                        if st.button("Pass to next person"):
+                        if st.button("Pass to next person"): #Asks player to pass the device to the next player
                             st.session_state.button = False
                             st.session_state.clicks += 1
                             break
                         else:
-                            st.error("Please complete choose an option to draw a new card")
+                            st.error("Please complete choose an option to draw a new card")#Makes player to choose an option to draw a new card
                             st.session_state.button = True
-                            break
-except Exception as ex:
+                            continue
+except Exception as ex:#handles exceptions
     st.error(ex)
 
                     

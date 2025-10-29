@@ -64,10 +64,6 @@ if 'hand' not in st.session_state:
     st.session_state.hand = []
 if "deck" not in st.session_state:
     st.session_state.deck = Deck()
-    st.session_state.deck.create_deck()
-    st.session_state.deck.shuffle()
-    st.session_state.deck.__repr__()
-st.session_state.deck = st.session_state.deck
 if "radio" not in st.session_state:
     st.session_state.radio = "TBD"
 if "topCard" not in st.session_state:
@@ -144,6 +140,9 @@ try:
 except Exception as ex:
     st.info(ex)
 try:
+    st.session_state.deck.create_deck()
+    st.session_state.deck.shuffle()
+    st.session_state.deck.__repr__()
     if st.session_state.press == True:
         st.session_state.shuffle = False
         deck = "" 

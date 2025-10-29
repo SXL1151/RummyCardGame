@@ -457,7 +457,7 @@ try:
                         if st.button("Pass to next person"):
                             st.session_state.button = False
                             st.session_state.clicks += 1
-                            continue
+                            break
                         else:
                             st.error("Please complete choose an option to draw a new card")
                             st.session_state.button = True

@@ -576,9 +576,7 @@ if st.session_state.handShuff == False:
                                 st.session_state.clicks += 1
                                 continue
                     else:
-                        st.stop()
-                    
-             continue       
+                        st.stop()       
 
 
                 

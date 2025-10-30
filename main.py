@@ -214,15 +214,25 @@ if st.session_state.handShuff == False:
                     st.info(meld)
                     if st.button("Form Set/Meld", key=f"buttonsetmeld {st.session_state.clicks}{i}{z}"):
                         suits = [card[-1] for card in st.session_state.setMeld]
-                        if len(set(suits)) != 1:
+                        values = [card[:0] for card in st.session_state.setMeld]
+                        st.text(len(suits))
+                        if len((suits)) < 3:
                             st.warning("Not a Run")
-                        st.session_state.setMeld.sort()
-                        for i in range(len(st.session_state.setMeld)-1):
-                            if st.session_state.setMeld[i+1] == int(st.session_state.setMeld[i]) + 1:
-                                st.success("Run Approved")
-                                st.session_state.setMeldFin.append(st.session_state.setMeld)
-                            else:
-                                st.error("Not a Run")
+                        st.info(st.session_state.setMeld)
+                        for card in st.session_state.setMeld:
+                            cardList = list(card)
+                            if len(cardList) == 3:
+                                value = cardList[0] + cardList[1]
+                            elif len(cardList) == 2:
+                                value = cardList[0]
+                            for card2 in st.session_state.setMeld:
+                                cardList2 = list(card2)
+                                if len(cardList) == 3:
+                                    value2 = cardList[0] + cardList[1]
+                                elif len(cardList2) == 2:
+                                    value2 = cardList2[0]
+                        if value == value2:
+                            st.success("Run Approved")
                         if len(st.session_state.setMeld) in st.session_state.lenSet:
                             st.warning("You cannot have more than 1 4-card sets/runs")
                         elif set1 == True and ((len(st.session_state.setMeld)) == 3 or (len(st.session_state.setMeld)) == 4):

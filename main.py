@@ -570,9 +570,12 @@ if st.session_state.handShuff == False:
                         st.rerun()
                     if st.button("Call Gin", key=f"buttongin {st.session_state.clicks}{i}{j}{z}"):
                         st.session_state.end = True
+                        st.rerun()
                     if st.button("Knock", key=f"buttonknock {st.session_state.clicks}{i}{j}{z}"):
                         st.session_state.end = True
-                    st.stop()
+                        st.rerun()
+                    else:
+                        st.stop()
 
 
                 

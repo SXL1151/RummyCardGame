@@ -574,9 +574,7 @@ if st.session_state.handShuff == False:
                                 st.session_state.button = False
                                 st.session_state.handShuff = True
                                 st.session_state.clicks += 1
-                                continue
-                    else:
-                        st.stop()       
+                                continue       
 
 
                 

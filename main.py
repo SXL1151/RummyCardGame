@@ -231,7 +231,7 @@ if st.session_state.handShuff == False:
                                     value2 = cardList[0] + cardList[1]
                                 elif len(cardList2) == 2:
                                     value2 = cardList2[0]
-                            if value2 - value = 1:
+                            if value2 - value == 1:
                                 st.success("Run Approved")
                         if value == value2:
                             st.success("Set Approved")

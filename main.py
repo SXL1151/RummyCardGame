@@ -554,6 +554,11 @@ if st.session_state.handShuff == False:
                                                 st.image(Diamonds + King)
                                     st.checkbox("", key=f"box 4{st.session_state.clicks}{j}")
                                     continue
+                            if st.button("Pass to next person"): #Asks player to pass the device to the next player
+                                st.session_state.button = False
+                                st.session_state.handShuff = True
+                                st.session_state.clicks += 1
+                                continue
                         st.session_state.hand[0][0][:st.session_state.cardsPerHand] = new_hand
                         st.session_state.disposed.append(st.session_state.radio)
                         st.info(f"Disposed card: {st.session_state.radio}")
@@ -570,11 +575,7 @@ if st.session_state.handShuff == False:
                     if st.button("Knock", key=f"buttonknock {st.session_state.clicks}{i}{j}{z}"):
                         st.session_state.end = True
                         st.rerun()
-                    if st.button("Pass to next person"): #Asks player to pass the device to the next player
-                                st.session_state.button = False
-                                st.session_state.handShuff = True
-                                st.session_state.clicks += 1
-                                continue       
+                    if st.
 
 
                 

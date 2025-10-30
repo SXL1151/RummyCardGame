@@ -195,6 +195,42 @@ try:
                             st.session_state.topCard = st.pills("Draw a new card", ["Select from deck"], key=f"pill2 {st.session_state.clicks}{i}{z}")
                         if st.session_state.topCard:
                             st.session_state.radio = "TBD"
+                        meldoset = st.multiselect("Create Melds or Sets",st.session_state.hand[0][0][st.session_state.cardsPerHand*i: st.session_state.cardsPerHand*(i+1)], max_selections = 4 )
+                        st.session_state.setMeldFin = meldoset
+                        meld = []
+                        for char in st.session_state.setMeldFin:
+                            listedChar = list(char)
+                            for char2 in st.session_state.setMeldFin:
+                                listedChar2 = list(char2)
+                                if listedChar[0] == listedChar2[0]:
+                                    set = True
+                                elif len(listedChar) == 3:
+                                    if len(listedChar2) == 3:
+                                        if listedChar[2] == listedChar2[2]:
+                                            strChar = ""
+                                            for char in listedChar2:
+                                                strChar = strChar + char
+                                                meld.append(strChar)
+                                elif (listedChar[1] == listedChar2[1]):
+                                    strChar = ""
+                                    for char in listedChar2:
+                                        strChar = strChar + char
+                                        meld.append(strChar)
+                                else:
+                                    set = False
+                                    break
+                        st.info(meld)
+                        if st.button("Form Set/Meld"):
+                            if set == True and ((len(st.session_state.setMeldFin)) == 3 or (len(st.session_state.setMeldFin)) == 4):
+                                st.success("Set Approved")
+                            elif set == True and ((len(st.session_state.setMeldFin)) != 3 or (len(st.session_state.setMeldFin)) != 4):
+                                st.error("Not a set")
+                                meldoset = ""
+                                st.session_state.setMeldFin = []
+                            else:
+                                st.error("Not a set")
+                                meldoset = ""
+                            st.session_state.setMeldFin = []
                     with col2:
                         st.session_state.radio = st.radio("Pick a card to dispose", st.session_state.hand[0][0][st.session_state.cardsPerHand*i: st.session_state.cardsPerHand*(i+1)], key=f"radio {st.session_state.clicks}{i}{z}") #Asks player for a card to dispose
                         for j, card in enumerate(st.session_state.hand[0][0][st.session_state.cardsPerHand*i: st.session_state.cardsPerHand*(i+1)]):
@@ -512,29 +548,7 @@ try:
                         if st.button("Call Gin", key=f"buttongin {st.session_state.clicks}{i}{j}{z}"):
                             st.session_state.end = True
                         if st.button("Knock", key=f"buttonknock {st.session_state.clicks}{i}{j}{z}"):
-                            st.session_state.end = True
-                        meldoset = st.multiselect("Create Melds or Sets",st.session_state.hand[0][0][st.session_state.cardsPerHand*i: st.session_state.cardsPerHand*(i+1)], max_selections = 4 )
-                        for char in meldoset:
-                            st.session_state.setMeldFin.append(char)
-                        for char in st.session_state.setMeldFin:
-                            listedChar = list(char)
-                            for char2 in st.session_state.setMeldFin:
-                                listedChar2 = list(char2)
-                                if listedChar[0] == listedChar2[0]:
-                                    set = True
-                                else:
-                                    set = False
-                                    break
-                        st.info(len(st.session_state.setMeldFin))
-                        if set == True and ((len(st.session_state.setMeldFin)-1) == 3 or (len(st.session_state.setMeldFin)-1) == 4):
-                            st.success("It is a set")
-                        elif set == True and ((len(st.session_state.setMeldFin)-1) != 3 or (len(st.session_state.setMeldFin)-1) != 4):
-                            st.error("Not a set")
-                            meldoset = ""
-                        else:
-                            st.error("Not a set")
-                            meldoset = ""
-                        
+                            st.session_state.end = True        
 except Exception as ex:#handles exceptions
     st.error(ex)
 

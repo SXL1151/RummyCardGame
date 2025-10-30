@@ -231,8 +231,10 @@ if st.session_state.handShuff == False:
                                     value2 = cardList[0] + cardList[1]
                                 elif len(cardList2) == 2:
                                     value2 = cardList2[0]
+                            if value2 - value = 1:
+                                st.success("Run Approved")
                         if value == value2:
-                            st.success("Run Approved")
+                            st.success("Set Approved")
                         elif len(st.session_state.setMeld) in st.session_state.lenSet:
                             st.warning("You cannot have more than 1 4-card sets/runs")
                         elif set1 == True and ((len(st.session_state.setMeld)) == 3 or (len(st.session_state.setMeld)) == 4):

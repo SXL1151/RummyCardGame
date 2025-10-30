@@ -557,7 +557,7 @@ if st.session_state.handShuff == False:
                             if st.button("Pass to next person"): #Asks player to pass the device to the next player
                                 st.session_state.button = False
                                 st.session_state.clicks += 1
-                                break
+                                continue
                         st.session_state.hand[0][0][:st.session_state.cardsPerHand] = new_hand
                         st.session_state.disposed.append(st.session_state.radio)
                         st.info(f"Disposed card: {st.session_state.radio}")

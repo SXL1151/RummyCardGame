@@ -597,35 +597,32 @@ try:
                 if st.button("Hide Cards",key=f"buttonpres2 {st.session_state.clicks}{st.session_state.playerTurn}"):
                     st.session_state.showCards = False
                     st.rerun()
-        if len(st.session_state.deadwood) == 0:
-            if st.button("Call Gin", key=f"buttongin {st.session_state.clicks}{j}{st.session_state.playerTurn}"):#If player calls gin, they are the winner
-                st.session_state.end = True
-                st.session_state.winner = st.session_state.playerTurn
-                st.session_state.gin = True
-                st.rerun()
-        elif st.session_state.deadwood <= 10:
-            if st.button("Knock", key=f"buttonknock {st.session_state.clicks}{j}{st.session_state.playerTurn}"):
-                points = calculate_deadwood(st.session_state.deadwood[0])
-                points2 = calculate_deadwood(st.session_state.deadwood[1])
-                if points < points2:
-                     st.session_state.knock = True #Checks if the opponent or player has won after knocking
-                else:
-                     st.session_state.knockOpp = True
-                st.session_state.end = True
-                st.session_state.knocker = st.session_state.playerTurn
-               
-                st.rerun()
-    if st.session_state.end == True:
-        st.header("Game Over") #Displays the winner based on gin or knock
-        if st.session_state.gin == True:
-            st.success(f"{st.session_state.players[st.session_state.winner-1]} wins by Gin!")
-        elif st.session_state.knock == True:
-            st.success(f"{st.session_state.players[st.session_state.knocker-1]} wins by Knocking")
-        elif st.session_state.knockOpp == True:
-            st.success(f"{st.session_state.players[st.session_state.knocker]} wins by winning the knock")
-        else:
-            st.success("Game Over")
-            st.success("Draw")
+                if len(st.session_state.deadwood) == 0 and st.session_state.deadwood != []:
+                    if st.button("Call Gin", key=f"buttongin {st.session_state.clicks}{j}{st.session_state.playerTurn}"):#If player calls gin, they are the winner
+                        st.session_state.end = True
+                        st.session_state.winner = st.session_state.playerTurn
+                        st.session_state.gin = True
+                elif st.session_state.deadwood <= 10:
+                    if st.button("Knock", key=f"buttonknock {st.session_state.clicks}{j}{st.session_state.playerTurn}"):
+                        points = calculate_deadwood(st.session_state.deadwood[0])
+                        points2 = calculate_deadwood(st.session_state.deadwood[1])
+                        if points < points2:
+                            st.session_state.knock = True #Checks if the opponent or player has won after knocking
+                        else:
+                            st.session_state.knockOpp = True
+                        st.session_state.end = True
+                        st.session_state.knocker = st.session_state.playerTurn
+                if st.session_state.end == True:
+                    st.header("Game Over") #Displays the winner based on gin or knock
+                    if st.session_state.gin == True:
+                        st.success(f"{st.session_state.players[st.session_state.winner-1]} wins by Gin!")
+                    elif st.session_state.knock == True:
+                        st.success(f"{st.session_state.players[st.session_state.knocker-1]} wins by Knocking")
+                    elif st.session_state.knockOpp == True:
+                        st.success(f"{st.session_state.players[st.session_state.knocker]} wins by winning the knock")
+                    else:
+                        st.success("Game Over")
+                        st.success("Draw")
 except:
     pass
             

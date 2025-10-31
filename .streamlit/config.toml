@@ -1,7 +1,6 @@
 [theme]
 backgroundColor = "black"
 baseRadius = "full"
-textColor = "white"
 primaryColor = "slateGray"
 [global]
 base="custom"

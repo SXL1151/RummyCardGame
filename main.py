@@ -204,9 +204,20 @@ try:
                 st.session_state.handShuff = False
                 st.rerun()
     st.error(len(st.session_state.deck.cards))
-    if st.session_state.handShuff == False:
-        if len(st.session_state.deck.cards) == 2:
+    if len(st.session_state.deck.cards) == 2:
             st.session_state.end = True
+    if st.session_state.end == True:
+        st.header("Game Over") #Displays the winner based on gin or knock
+        if st.session_state.gin == True:
+            st.success(f"{st.session_state.players[st.session_state.winner-1]} wins by Gin!")
+        elif st.session_state.knock == True:
+            st.success(f"{st.session_state.players[st.session_state.knocker-1]} wins by Knocking")
+        elif st.session_state.knockOpp == True:
+            st.success(f"{st.session_state.players[st.session_state.knocker]} wins by winning the knock")
+        else:
+            st.success("Game Over")
+            st.success("Draw")
+    if st.session_state.handShuff == False:
         deck = ""
         st.session_state.players = st.session_state.players[:2]
         if st.session_state.playerTurn == 3:
@@ -603,6 +614,7 @@ try:
                         st.session_state.end = True
                         st.session_state.winner = st.session_state.playerTurn
                         st.session_state.gin = True
+                        st.rerun()
                 elif st.session_state.deadwood <= 10:
                     if st.button("Knock", key=f"buttonknock {st.session_state.clicks}{j}{st.session_state.playerTurn}"):
                         points = calculate_deadwood(st.session_state.deadwood[0])
@@ -613,17 +625,7 @@ try:
                             st.session_state.knockOpp = True
                         st.session_state.end = True
                         st.session_state.knocker = st.session_state.playerTurn
-                if st.session_state.end == True:
-                    st.header("Game Over") #Displays the winner based on gin or knock
-                    if st.session_state.gin == True:
-                        st.success(f"{st.session_state.players[st.session_state.winner-1]} wins by Gin!")
-                    elif st.session_state.knock == True:
-                        st.success(f"{st.session_state.players[st.session_state.knocker-1]} wins by Knocking")
-                    elif st.session_state.knockOpp == True:
-                        st.success(f"{st.session_state.players[st.session_state.knocker]} wins by winning the knock")
-                    else:
-                        st.success("Game Over")
-                        st.success("Draw")
+                        st.rerun()
 except:
     pass
             

@@ -115,6 +115,10 @@ if "start" not in st.session_state:
     st.session_state.start = False
 if "playerTurn" not in st.session_state:
     st.session_state.playerTurn = 1
+if "cardConf" not in st.session_state:
+    st.session_state.cardConf = True
+if "deadwood" not in st.session_state:
+    st.session_state.deadwood = []
 #Lines 93 - 97; base url to get the images of cards
 Clubs = "https://www.tekeye.uk/playing_cards/images/svg_playing_cards/fronts/png_96_dpi/clubs"
 Spades = "https://www.tekeye.uk/playing_cards/images/svg_playing_cards/fronts/png_96_dpi/spades"
@@ -169,7 +173,7 @@ try:
             
 
 except Exception as ex:
-    st.info(ex)
+    pass
 
 if st.session_state.beg == False:
     if st.session_state.handShuff == True:
@@ -184,8 +188,8 @@ if st.session_state.beg == False:
 if st.session_state.handShuff == False:
     deck = ""
     st.session_state.players = st.session_state.players[:2]
-    st.info(st.session_state.players)
-    st.info(st.session_state.players[st.session_state.playerTurn-1])
+    if st.session_state.playerTurn == 3:
+        st.session_state.playerTurn = 1
     if st.session_state.button == True and st.session_state.playerTurn != None:
         st.warning(f"Please pass the device to {st.session_state.players[st.session_state.playerTurn-1]}")
         disposed = ""
@@ -195,7 +199,7 @@ if st.session_state.handShuff == False:
         subcol1, subcol2, subcol3, subcol4, subcol5 = st.columns(5)
         subColList = [subcol1, subcol2, subcol3, subcol4, subcol5,subcol1, subcol2, subcol3, subcol4, subcol5] #To align the interactive objects
         with col1:
-            if disposed != "": #Asks player to draw from deck or disposal pile
+            if st.session_state.disposed != "": #Asks player to draw from deck or disposal pile
                 st.session_state.topCard = st.pills("Draw a new card", ["Select from disposal pile", "Select from deck"], key=f"pill {st.session_state.clicks}{st.session_state.playerTurn}")
             else:
                 st.session_state.topCard = st.pills("Draw a new card", ["Select from deck"], key=f"pill2 {st.session_state.clicks}{st.session_state.playerTurn}")
@@ -213,14 +217,12 @@ if st.session_state.handShuff == False:
                     else:
                         set1 = False
                         break
-            st.info(meld)
             if st.button("Form Set/Meld", key=f"buttonsetmeld {st.session_state.clicks}{st.session_state.playerTurn}"):
                 suits = [card[-1] for card in st.session_state.setMeld]
                 values = [card[:0] for card in st.session_state.setMeld]
                 st.text(len(suits))
                 if len((suits)) < 3:
                     st.warning("Not a Run")
-                st.info(st.session_state.setMeld)
                 for card in st.session_state.setMeld:
                     cardList = list(card)
                     if len(cardList) == 3:
@@ -233,13 +235,18 @@ if st.session_state.handShuff == False:
                             value2 = cardList[0] + cardList[1]
                         elif len(cardList2) == 2:
                             value2 = cardList2[0]
-                    if int(value2) - int(value) == 1:
-                        st.success("Run Approved")
-                if value == value2:
+                    try:
+                        if int(value2) - int(value) == 1:
+                            st.success("Run Approved")
+                            approv = True
+                    except:
+                        pass
+                if value == value2 and (len(st.session_state.setMeld) not in st.session_state.lenSet) and (((len(st.session_state.setMeld)) == 3 or (len(st.session_state.setMeld)) == 4)):
                     st.success("Set Approved")
-                elif len(st.session_state.setMeld) in st.session_state.lenSet:
+                    st.session_state.setMeldFin.append(st.session_state.setMeld)
+                if len(st.session_state.setMeld) in st.session_state.lenSet:
                     st.warning("You cannot have more than 1 4-card sets/runs")
-                elif set1 == True and ((len(st.session_state.setMeld)) == 3 or (len(st.session_state.setMeld)) == 4):
+                if set1 == True and ((len(st.session_state.setMeld)) == 3 or (len(st.session_state.setMeld)) == 4):
                     if st.session_state.setMeld in st.session_state.setMeldFin:
                         st.warning("Set/Meld already approved")
                 
@@ -247,15 +254,17 @@ if st.session_state.handShuff == False:
                         st.success("Set Approved")
                         st.session_state.setMeldFin.append(st.session_state.setMeld)
                     
-                elif set == True and ((len(st.session_state.setMeld)) != 3 or (len(st.session_state.setMeld)) != 4):
+                elif set == True and ((len(st.session_state.setMeld)) != 3 or (len(st.session_state.setMeld)) != 4) and (approv == True):
                     st.error("Not a set")
                     meldoset = ""
                     st.session_state.setMeld = []
                 else:
                     st.error("Not a set")
                     meldoset = ""
-                st.session_state.setMeld = []
+                    st.session_state.setMeld = []
             st.info(st.session_state.setMeldFin)
+            if st.button("Clear Set/Melds", key=f"buttonclearsetmeld {st.session_state.clicks}{st.session_state.playerTurn}"):
+                st.session_state.setMeldFin = []
         with col2:
             st.session_state.radio = st.radio("Pick a card to dispose", st.session_state.hand[0][0][st.session_state.cardsPerHand*(st.session_state.playerTurn-1): st.session_state.cardsPerHand*(st.session_state.playerTurn)], key=f"radio {st.session_state.clicks}{st.session_state.playerTurn}") #Asks player for a card to dispose
             for j, card in enumerate(st.session_state.hand[0][0][st.session_state.cardsPerHand*(st.session_state.playerTurn - 1): st.session_state.cardsPerHand*(st.session_state.playerTurn)]):
@@ -411,158 +420,157 @@ if st.session_state.handShuff == False:
                     
                     continue
         st.divider()
-        st.info(st.session_state.setMeldFin)
         with col3:#Includes options to confirm, show cards, and hide cards
-            if st.session_state.cardConf == True:
-                if st.button("Confirm", key=f"button {st.session_state.clicks}{j}{st.session_state.playerTurn}"):
-                    new_hand = st.session_state.handObj.pop_one(st.session_state.radio, st.session_state.hand[0][0][st.session_state.cardsPerHand*(st.session_state.playerTurn-1): st.session_state.cardsPerHand*(st.session_state.playerTurn)])
-                    st.info(new_hand)
-                    if st.session_state.topCard == "Select from deck":
-                        new_card = st.session_state.deck.cards[0]
-                        st.session_state.deck.pop_one(new_card, st.session_state.deck.cards)
-                        st.warning(new_card)
-                    elif st.session_state.topCard == "Select from disposal pile":
-                        new_card = st.session_state.disposed[0]
-                        st.session_state.disposed.pop(0)
-                        st.info(new_card)
-                    else:
-                        st.error("Please complete choose an option to draw a new card")#Makes player to choose an option to draw a new card
-                        st.session_state.button = True
-                    new_hand.append(new_card)
-                    if st.session_state.topCard != "":
-                        st.success(f"New Hand: {new_hand}")#Shows the player their new hand
-                        for j, card in enumerate(new_hand):
-                            cardList = list(card)
-                            with subColList[(j*0)+j]:#Provides images for updated hand
-                                if st.session_state.showCards == False:
-                                    st.image("https://i.ebayimg.com/images/g/MjgAAOSw2OliE9eG/s-l1200.jpg")
-                                else:
-                                    if cardList[0] == "A":
-                                        if cardList[1] == "S":
-                                            st.image(SpadesSimple + Asimple)
-                                        elif cardList[1] == "C":
-                                            st.image(Clubs + Ac)
-                                        elif cardList[1] == "H":
-                                            st.image(Hearts + Ac)
-                                        else:
-                                            st.image(Diamonds + Ac)
-                                    if cardList[0] == "2":
-                                        if cardList[1] == "S":
-                                            st.image(Spades + Two)
-                                        elif cardList[1] == "C":
-                                            st.image(Clubs + Two)
-                                        elif cardList[1] == "H":
-                                            st.image(Hearts + Two)
-                                        else:
-                                            st.image(Diamonds + Two)
-                                    if cardList[0] == "3":
-                                        if cardList[1] == "S":
-                                            st.image(Spades + Three)
-                                        elif cardList[1] == "C":
-                                            st.image(Clubs + Three)
-                                        elif cardList[1] == "H":
-                                            st.image(Hearts + Three)
-                                        else:
-                                            st.image(Diamonds + Three)
-                                    if cardList[0] == "4":
-                                        if cardList[1] == "S":
-                                            st.image(Spades + Four)
-                                        elif cardList[1] == "C":
-                                            st.image(Clubs + Four)
-                                        elif cardList[1] == "H":
-                                            st.image(Hearts + Four)
-                                        else:
-                                            st.image(Diamonds + Four)
-                                    if cardList[0] == "5":
-                                        if cardList[1] == "S":
-                                            st.image(Spades + Five)
-                                        elif cardList[1] == "C":
-                                            st.image(Clubs + Five)
-                                        elif cardList[1] == "H":
-                                            st.image(Hearts + Five)
-                                        else:
-                                            st.image(Diamonds + Five)
-                                    if cardList[0] == "6":
-                                        if cardList[1] == "S":
-                                            st.image(Spades + Six)
-                                        elif cardList[1] == "C":
-                                            st.image(Clubs + Six)
-                                        elif cardList[1] == "H":
-                                            st.image(Hearts + Six)
-                                        else:
-                                            st.image(Diamonds + Six)
-                                    if cardList[0] == "7":
-                                        if cardList[1] == "S":
-                                            st.image(Spades + Seven)
-                                        elif cardList[1] == "C":
-                                            st.image(Clubs + Seven)
-                                        elif cardList[1] == "H":
-                                            st.image(Hearts + Seven)
-                                        else:
-                                            st.image(Diamonds + Seven)
-                                    if cardList[0] == "8":
-                                        if cardList[1] == "S":
-                                            st.image(Spades + Eight)
-                                        elif cardList[1] == "C":
-                                            st.image(Clubs + Eight)
-                                        elif cardList[1] == "H":
-                                            st.image(Hearts + Eight)
-                                        else:
-                                            st.image(Diamonds + Eight)
-                                    if cardList[0] == "9":
-                                        if cardList[1] == "S":
-                                            st.image(Spades + Nine)
-                                        elif cardList[1] == "C":
-                                            st.image(Clubs + Nine)
-                                        elif cardList[1] == "H":
-                                            st.image(Hearts + Nine)
-                                        else:
-                                            st.image(Diamonds + Nine)
-                                    if cardList[0] + cardList[1] == "10":
-                                        if cardList[2] == "S":
-                                            st.image(Spades + Ten)
-                                        elif cardList[2] == "C":
-                                            st.image(Clubs + Ten)
-                                        elif cardList[2] == "H":
-                                            st.image(Hearts + Ten)
-                                        else:
-                                            st.image(Diamonds + Ten)
-                                    if cardList[0] == "J":
-                                        if cardList[1] == "S":
-                                            st.image(Spades + Jack)
-                                        elif cardList[1] == "C":
-                                            st.image(Clubs + Jack)
-                                        elif cardList[1] == "H":
-                                            st.image(Hearts + Jack)
-                                        else:
-                                            st.image(Diamonds + Jack)
-                                    if cardList[0] == "Q":
-                                        if cardList[1] == "S":
-                                            st.image(Spades + Queen)
-                                        elif cardList[1] == "C":
-                                            st.image(Clubs + Queen)
-                                        elif cardList[1] == "H":
-                                            st.image(Hearts + Queen)
-                                        else:
-                                            st.image(Diamonds + Queen)
-                                    if cardList[0] == "K":
-                                        if cardList[1] == "S":
-                                            st.image(Spades + King)
-                                        elif cardList[1] == "C":
-                                            st.image(Clubs + King)
-                                        elif cardList[1] == "H":
-                                            st.image(Hearts + King)
-                                        else:
-                                            st.image(Diamonds + King)
-                                st.checkbox("", key=f"box 4{st.session_state.clicks}{j}")
-                                continue
-            else:
-                if st.button("Pass to next person"): #Asks player to pass the device to the next player
-                    st.session_state.clicks += 1
+            if st.button("Confirm", key=f"button {st.session_state.clicks}{j}{st.session_state.playerTurn}"):
+                new_hand = st.session_state.handObj.pop_one(st.session_state.radio, st.session_state.hand[0][0][st.session_state.cardsPerHand*(st.session_state.playerTurn-1): st.session_state.cardsPerHand*(st.session_state.playerTurn)])
+                if st.session_state.topCard == "Select from deck":
+                    new_card = st.session_state.deck.cards[0]
+                    st.session_state.deck.pop_one(new_card, st.session_state.deck.cards)
+                    st.warning(new_card)
+                elif st.session_state.topCard == "Select from disposal pile":
+                    new_card = st.session_state.disposed[0]
+                    st.session_state.disposed.pop(0)
+                else:
+                    st.error("Please complete choose an option to draw a new card")#Makes player to choose an option to draw a new card
+                    st.session_state.button = True
+                new_hand.append(new_card)
+                if st.session_state.topCard != "":
+                    st.success(f"New Hand: {new_hand}")#Shows the player their new hand
+                    for j, card in enumerate(new_hand):
+                        cardList = list(card)
+                        with subColList[(j*0)+j]:#Provides images for updated hand
+                            if st.session_state.showCards == False:
+                                st.image("https://i.ebayimg.com/images/g/MjgAAOSw2OliE9eG/s-l1200.jpg")
+                            else:
+                                if cardList[0] == "A":
+                                    if cardList[1] == "S":
+                                        st.image(SpadesSimple + Asimple)
+                                    elif cardList[1] == "C":
+                                        st.image(Clubs + Ac)
+                                    elif cardList[1] == "H":
+                                        st.image(Hearts + Ac)
+                                    else:
+                                        st.image(Diamonds + Ac)
+                                if cardList[0] == "2":
+                                    if cardList[1] == "S":
+                                        st.image(Spades + Two)
+                                    elif cardList[1] == "C":
+                                        st.image(Clubs + Two)
+                                    elif cardList[1] == "H":
+                                        st.image(Hearts + Two)
+                                    else:
+                                        st.image(Diamonds + Two)
+                                if cardList[0] == "3":
+                                    if cardList[1] == "S":
+                                        st.image(Spades + Three)
+                                    elif cardList[1] == "C":
+                                        st.image(Clubs + Three)
+                                    elif cardList[1] == "H":
+                                        st.image(Hearts + Three)
+                                    else:
+                                        st.image(Diamonds + Three)
+                                if cardList[0] == "4":
+                                    if cardList[1] == "S":
+                                        st.image(Spades + Four)
+                                    elif cardList[1] == "C":
+                                        st.image(Clubs + Four)
+                                    elif cardList[1] == "H":
+                                        st.image(Hearts + Four)
+                                    else:
+                                        st.image(Diamonds + Four)
+                                if cardList[0] == "5":
+                                    if cardList[1] == "S":
+                                        st.image(Spades + Five)
+                                    elif cardList[1] == "C":
+                                        st.image(Clubs + Five)
+                                    elif cardList[1] == "H":
+                                        st.image(Hearts + Five)
+                                    else:
+                                        st.image(Diamonds + Five)
+                                if cardList[0] == "6":
+                                    if cardList[1] == "S":
+                                        st.image(Spades + Six)
+                                    elif cardList[1] == "C":
+                                        st.image(Clubs + Six)
+                                    elif cardList[1] == "H":
+                                        st.image(Hearts + Six)
+                                    else:
+                                        st.image(Diamonds + Six)
+                                if cardList[0] == "7":
+                                    if cardList[1] == "S":
+                                        st.image(Spades + Seven)
+                                    elif cardList[1] == "C":
+                                        st.image(Clubs + Seven)
+                                    elif cardList[1] == "H":
+                                        st.image(Hearts + Seven)
+                                    else:
+                                        st.image(Diamonds + Seven)
+                                if cardList[0] == "8":
+                                    if cardList[1] == "S":
+                                        st.image(Spades + Eight)
+                                    elif cardList[1] == "C":
+                                        st.image(Clubs + Eight)
+                                    elif cardList[1] == "H":
+                                        st.image(Hearts + Eight)
+                                    else:
+                                        st.image(Diamonds + Eight)
+                                if cardList[0] == "9":
+                                    if cardList[1] == "S":
+                                        st.image(Spades + Nine)
+                                    elif cardList[1] == "C":
+                                        st.image(Clubs + Nine)
+                                    elif cardList[1] == "H":
+                                        st.image(Hearts + Nine)
+                                    else:
+                                        st.image(Diamonds + Nine)
+                                if cardList[0] + cardList[1] == "10":
+                                    if cardList[2] == "S":
+                                        st.image(Spades + Ten)
+                                    elif cardList[2] == "C":
+                                        st.image(Clubs + Ten)
+                                    elif cardList[2] == "H":
+                                        st.image(Hearts + Ten)
+                                    else:
+                                        st.image(Diamonds + Ten)
+                                if cardList[0] == "J":
+                                    if cardList[1] == "S":
+                                        st.image(Spades + Jack)
+                                    elif cardList[1] == "C":
+                                        st.image(Clubs + Jack)
+                                    elif cardList[1] == "H":
+                                        st.image(Hearts + Jack)
+                                    else:
+                                        st.image(Diamonds + Jack)
+                                if cardList[0] == "Q":
+                                    if cardList[1] == "S":
+                                        st.image(Spades + Queen)
+                                    elif cardList[1] == "C":
+                                        st.image(Clubs + Queen)
+                                    elif cardList[1] == "H":
+                                        st.image(Hearts + Queen)
+                                    else:
+                                        st.image(Diamonds + Queen)
+                                if cardList[0] == "K":
+                                    if cardList[1] == "S":
+                                        st.image(Spades + King)
+                                    elif cardList[1] == "C":
+                                        st.image(Clubs + King)
+                                    elif cardList[1] == "H":
+                                        st.image(Hearts + King)
+                                    else:
+                                        st.image(Diamonds + King)
+                            st.checkbox("", key=f"box 4{st.session_state.clicks}{j}")
+                            continue
+                    st.session_state.hand[0][0][st.session_state.cardsPerHand*(st.session_state.playerTurn-1): st.session_state.cardsPerHand*(st.session_state.playerTurn)] = new_hand
+                    st.session_state.disposed.append(st.session_state.radio)
                     st.session_state.playerTurn += 1
-                    st.rerun()
-                st.session_state.hand[0][0][:st.session_state.cardsPerHand] = new_hand
-            st.session_state.disposed.append(st.session_state.radio)
+                    if st.button("Pass to next person"): #Asks player to pass the device to the next player
+                        if st.session_state.playerTurn == 1:
+                            st.session_state.playerTurn += 1
+                        elif st.session_state.playerTurn == 2:
+                            st.session_state.playerTurn = 1
+                        st.session_state.clicks += 1
+                        st.rerun()
             st.info(f"Disposed card: {st.session_state.radio}")
             if st.button("Show Cards",key=f"buttonpres {st.session_state.clicks}{st.session_state.playerTurn}"):
                 st.session_state.showCards = True
@@ -570,10 +578,19 @@ if st.session_state.handShuff == False:
             if st.button("Hide Cards",key=f"buttonpres2 {st.session_state.clicks}{st.session_state.playerTurn}"):
                 st.session_state.showCards = False
                 st.rerun()
-            if st.button("Call Gin", key=f"buttongin {st.session_state.clicks}{j}{st.session_state.playerTurn}"):
-                st.session_state.end = True
-            if st.button("Knock", key=f"buttonknock {st.session_state.clicks}{j}{st.session_state.playerTurn}"):
-                st.session_state.end = True
+            for i, char in enumerate(st.session_state.hand[0][0][st.session_state.cardsPerHand*(st.session_state.playerTurn-1): st.session_state.cardsPerHand*(st.session_state.playerTurn)]):
+                    if char in st.session_state.setMeldFin:
+                        pass
+                    else:
+                        st.session_state.deadwood.append(char)
+            if len(st.session_state.deadwood == 0):
+                if st.button("Call Gin", key=f"buttongin {st.session_state.clicks}{j}{st.session_state.playerTurn}"):
+                    st.session_state.end = True
+                    st.rerun()
+            if len(st.session_state.deadwood) < 11:
+                if st.button("Knock", key=f"buttonknock {st.session_state.clicks}{j}{st.session_state.playerTurn}"):
+                    st.session_state.end = True
+                    st.rerun()
 
 
         

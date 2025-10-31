@@ -203,7 +203,7 @@ try:
                 st.session_state.hand.append(st.session_state.bin)
                 st.session_state.handShuff = False
                 st.rerun()
-    st.error(len(st.session_state.deck.cards)
+    st.error(len(st.session_state.deck.cards))
     if st.session_state.handShuff == False:
         if len(st.session_state.deck.cards) == 2:
             st.session_state.end = True

@@ -1,5 +1,4 @@
 [theme]
-backgroundColor = "black"
 baseRadius = "full"
 [global]
 base="custom"

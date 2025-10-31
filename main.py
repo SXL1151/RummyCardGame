@@ -203,9 +203,9 @@ try:
                 st.session_state.hand.append(st.session_state.bin)
                 st.session_state.handShuff = False
                 st.rerun()
-    if len(st.session_state.deck.cards) == 2:
-        st.session_state.end = True
     if st.session_state.handShuff == False:
+        if len(st.session_state.deck.cards) == 2:
+            st.session_state.end = True
         deck = ""
         st.session_state.players = st.session_state.players[:2]
         if st.session_state.playerTurn == 3:
